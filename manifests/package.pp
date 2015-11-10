@@ -176,11 +176,19 @@ class elasticsearch::package {
   }
 
   if ($elasticsearch::package_provider == 'package') {
-
-    package { $elasticsearch::package_name:
-      ensure   => $package_ensure,
-      source   => $pkg_source,
-      provider => $pkg_provider,
+    #install with determined provider
+    if $pkg_provider != undef {
+      package { $elasticsearch::package_name:
+        ensure   => $package_ensure,
+        source   => $pkg_source,
+        provider => $pkg_provider,
+      }
+    } else {
+      #install with default provider
+      package { $elasticsearch::package_name:
+        ensure   => $package_ensure,
+        source   => $pkg_source,
+      }
     }
 
   } else {
